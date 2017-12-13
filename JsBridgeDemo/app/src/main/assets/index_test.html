@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN" dir="ltr">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>JSBridge demo</title>
+</head>
+<body>
+
+<p style="color: blue; margin-left: 2px">点击按钮调用android函数</p>
+
+<button onclick="callNative(js_bridge_func_print)">调用native方法</button><br/>
+
+
+
+<script>
+/************************************************************
+						demo start
+*************************************************************/
+
+// demo的日志开关
+var logEnable = true;
+function log(msg) {
+	if (!logEnable) {
+		return;
+	}
+	alert("" + msg);
+}
+
+
+/**
+ * 异步执行一个任务，用于在页面加载过程中执行请求
+ *
+ * 只有在页面加载完成之后才会加载js库，加载完js库JSBridge才初始化了，所以加载过程中是不能直接使用JSBridge的。
+ * 此方法判断是否已经初始化完毕，如果是则马上执行请求，否则在初始化完毕后自动执行请求。
+ * @param callback 要执行的逻辑的回调函数
+ */
+function callNative(callback) {
+	if (typeof JSBridge == "object" && typeof JSBridge.invoke == "function") {
+		callback();
+	} else {
+		if (document.addEventListener) {
+			document.addEventListener("JSBridgeReady", callback, false);
+		} else if (document.attachEvent) {
+			document.attachEvent("JSBridgeReady", callback);
+			document.attachEvent("onJSBridgeReady", callback);
+		}
+	}
+}
+
+
+function js_bridge_func_print(){
+	JSBridge.invoke("js_bridge_func_print", {msg:"I am from js."},
+	function(res){
+		log("msg from java : " + res.msg);
+	});
+}
+
+</script>
+</body>
+</html>

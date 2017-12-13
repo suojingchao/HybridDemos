@@ -1,0 +1,8 @@
+.DS_Store
+JsBridge
+JsBridgeDemo/.gradle
+JsBridgeDemo/local.properties
+JsBridgeDemo/.idea/*
+JsBridgeDemo/.DS_Store
+JsBridgeDemo/build
+JsBridgeDemo/captures
